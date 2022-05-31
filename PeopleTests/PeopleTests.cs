@@ -11,14 +11,15 @@ namespace PeopleTests
     [TestClass]
     public class PeopleTests
     {
-        [TestMethod]
-        public void NumberOfLinesInFilesShouldMatchNumberOfPeople()
+        private const int NumberOfPeople = 100000;
+        
+        [TestInitialize()]
+        public void Startup()
         {
-            int numberOfPeople = 100000;
-            var twoMillionPeople = new List<Person>(numberOfPeople);
+            var twoMillionPeople = new List<Person>(NumberOfPeople);
             
             // Generate 50.000 items for RandomNumber = 0, and 25.000 for each RandomNumber = 1 and 2
-            for (int i = 0; i < numberOfPeople / 2; i++)
+            for (int i = 0; i < NumberOfPeople / 2; i++)
             {
                 twoMillionPeople.Add(new Person
                 {
@@ -30,7 +31,7 @@ namespace PeopleTests
                 });
             }
             
-            for (int i = 0; i < numberOfPeople / 4; i++)
+            for (int i = 0; i < NumberOfPeople / 4; i++)
             {
                 twoMillionPeople.Add(new Person
                 {
@@ -61,7 +62,11 @@ namespace PeopleTests
                     fileInfo.Delete();
                 }
             }
-            
+        }
+        
+        [TestMethod]
+        public void NumberOfLinesInFilesShouldMatchNumberOfPeople()
+        {
             int totalLines = 0;
             for (int i = 0; i < 3; i++)
             {
@@ -69,14 +74,19 @@ namespace PeopleTests
                 totalLines += linesOnFile;
             }
             
-            Assert.AreEqual(numberOfPeople, totalLines);
-            
+            Assert.AreEqual(NumberOfPeople, totalLines);
+        }
+
+        [TestMethod]
+        public void AllButZeroFileShouldHaveBeenRemoved()
+        {
             Program.RemoveFilesUnderAverageFileSize();
             
+            var directoryFiles = new DirectoryInfo(Program.PeoplePath);
             var numberOfFiles = directoryFiles.GetFiles().Length;
             
             Assert.AreEqual(1, numberOfFiles);
-
+            
             var zeroFile = directoryFiles.GetFiles().First();
             Assert.AreEqual("0.txt", zeroFile.Name);
         }
