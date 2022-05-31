@@ -18,8 +18,8 @@ namespace PeopleTests
         {
             var twoMillionPeople = new List<Person>(NumberOfPeople);
             
-            // Generate 50.000 items for RandomNumber = 0, and 25.000 for each RandomNumber = 1 and 2
-            for (int i = 0; i < NumberOfPeople / 2; i++)
+            // Generate 99.000 items for RandomNumber = 0, and 500 for each RandomNumber = 1 and 2
+            for (int i = 0; i < NumberOfPeople - 1000; i++)
             {
                 twoMillionPeople.Add(new Person
                 {
@@ -31,7 +31,7 @@ namespace PeopleTests
                 });
             }
             
-            for (int i = 0; i < NumberOfPeople / 4; i++)
+            for (int i = 0; i < 500; i++)
             {
                 twoMillionPeople.Add(new Person
                 {
@@ -53,15 +53,6 @@ namespace PeopleTests
             
             Program.SetUpLocalStorage();
             Program.SplitPeopleToSpecificFiles(twoMillionPeople);
-            
-            var directoryFiles = new DirectoryInfo(Program.PeoplePath);
-            foreach (var fileInfo in directoryFiles.GetFiles())
-            {
-                if (fileInfo.Length == 0)
-                {
-                    fileInfo.Delete();
-                }
-            }
         }
         
         [TestMethod]
